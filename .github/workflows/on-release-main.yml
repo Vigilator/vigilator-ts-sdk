@@ -23,9 +23,10 @@ jobs:
         run: echo tag=${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
 
       # The tag (in the form `*.*.*`, no `v` prefix) is the source of truth
-      # for the published version.
+      # for the published version. `--allow-same-version` keeps the step a
+      # no-op when package.json was already bumped to the tag.
       - name: Update package version
-        run: npm version --no-git-tag-version "$RELEASE_VERSION"
+        run: npm version --no-git-tag-version --allow-same-version "$RELEASE_VERSION"
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
 
