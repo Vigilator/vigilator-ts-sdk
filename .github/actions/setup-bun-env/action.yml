@@ -1,0 +1,29 @@
+name: "Setup Bun Environment"
+description: "Install Bun, the requested Node.js version and the project's dependencies"
+
+inputs:
+  node-version:
+    description: "Node.js version to use"
+    required: true
+    default: "22"
+  bun-version:
+    description: "Bun version to use"
+    required: true
+    default: "1.4.0"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        registry-url: "https://registry.npmjs.org"
+
+    - name: Install Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: ${{ inputs.bun-version }}
+
+    - name: Install dependencies
+      run: bun install --frozen-lockfile --ignore-scripts
+      shell: bash

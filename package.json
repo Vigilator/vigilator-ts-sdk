@@ -1,0 +1,83 @@
+{
+	"name": "@vigilator/sdk",
+	"version": "0.1.0",
+	"description": "The TypeScript SDK for the Vigilator API.",
+	"type": "module",
+	"license": "MIT",
+	"author": {
+		"name": "Vigilator",
+		"email": "noah@vigilator.ai"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/vigilator/vigilator-ts-sdk.git"
+	},
+	"homepage": "https://docs.vigilator.ai/technical/typescript",
+	"bugs": "https://github.com/vigilator/vigilator-ts-sdk/issues",
+	"keywords": [
+		"vigilator",
+		"human-in-the-loop",
+		"ai-agents",
+		"interrupts",
+		"webhooks",
+		"sdk"
+	],
+	"sideEffects": false,
+	"engines": {
+		"node": ">=20"
+	},
+	"packageManager": "bun@1.4.0",
+	"files": [
+		"dist",
+		"CHANGELOG.md"
+	],
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			}
+		},
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown --watch",
+		"generate": "bun scripts/generate-types.ts",
+		"typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.build.json",
+		"lint": "biome lint --write",
+		"format": "biome format --write",
+		"check": "biome check --write",
+		"ci": "biome ci",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"prepublishOnly": "bun run ci && bun run typecheck && bun run test && bun run build",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.18.5",
+		"@biomejs/biome": "2.5.12",
+		"@commitlint/cli": "^21.2.2",
+		"@commitlint/config-conventional": "^21.2.2",
+		"@types/node": "^24",
+		"@vitest/coverage-v8": "^5.0.0",
+		"husky": "^9.1.7",
+		"openapi-typescript": "^7.13.0",
+		"publint": "^0.3.24",
+		"tsdown": "^0.23.0",
+		"typescript": "^5.9.0",
+		"vitest": "^5.0.0"
+	}
+}

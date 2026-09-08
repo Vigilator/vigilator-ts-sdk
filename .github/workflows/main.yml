@@ -1,0 +1,52 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-bun-env
+
+      - name: Lint and format
+        run: bun run ci
+
+      - name: Check typing
+        run: bun run typecheck
+
+      # CI=true makes tsdown run publint and Are The Types Wrong as well.
+      - name: Build and check the package shape
+        run: bun run build
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["20", "22", "24"]
+      fail-fast: false
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-bun-env
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run tests
+        run: bun run test:coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        if: ${{ matrix.node-version == '22' }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
